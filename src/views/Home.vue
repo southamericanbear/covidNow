@@ -10,10 +10,15 @@
     >
       Clear Country
     </button>
+
+    <CountryDataBox
+      v-if="countrySelected"
+      :country="country"
+      :countryFlag="countryFlag"
+    />
   </main>
   <main class="flex flex-col align-center justify-center text-center" v-else>
     <div class="text-grey-500 text-3xl mt-10 mb6">Fetching Data</div>
-
     <img :src="loadingImage" class="w-24 m-auto" alt="loading" />
   </main>
 </template>
@@ -22,10 +27,11 @@
 import DataTitle from "../components/DataTitle";
 import DataBoxes from "../components/DataBoxes";
 import CountrySelect from "../components/CountrySelect";
+import CountryDataBox from "../components/CountryDataBox";
 
 export default {
   name: "Home",
-  components: { DataTitle, DataBoxes, CountrySelect },
+  components: { DataTitle, DataBoxes, CountrySelect, CountryDataBox },
   data() {
     return {
       loading: true,
@@ -34,6 +40,10 @@ export default {
       stats: {},
       countries: [],
       loadingImage: require("../assets/tenor.gif"),
+      country: {},
+      countryCode: "",
+      countryFlag: "",
+      countrySelected: false,
     };
   },
   methods: {
@@ -45,7 +55,12 @@ export default {
 
     getCountryData(country) {
       this.stats = country;
+      this.country = country;
       this.title = country.Country;
+      let countryCodeUpper = country.CountryCode;
+      this.countryCode = countryCodeUpper.toLowerCase();
+      this.countryFlag = `https://flagcdn.com/h240/${this.countryCode}.png `;
+      this.countrySelected = true;
     },
     async clearCountryData() {
       this.loading = true;
